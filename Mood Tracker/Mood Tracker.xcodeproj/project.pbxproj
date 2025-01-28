@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4E6AB7132D48FA2C00A7C6C1 /* MoodSelectionScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6AB7122D48FA2C00A7C6C1 /* MoodSelectionScreenViewModel.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		4E31F2242D487DC800D628D2 /* Mood Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mood Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E6AB7122D48FA2C00A7C6C1 /* MoodSelectionScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodSelectionScreenViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +37,7 @@
 		4E31F21B2D487DC800D628D2 = {
 			isa = PBXGroup;
 			children = (
+				4E6AB7122D48FA2C00A7C6C1 /* MoodSelectionScreenViewModel.swift */,
 				4E31F2262D487DC800D628D2 /* Mood Tracker */,
 				4E31F2252D487DC800D628D2 /* Products */,
 			);
@@ -119,6 +125,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E6AB7132D48FA2C00A7C6C1 /* MoodSelectionScreenViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

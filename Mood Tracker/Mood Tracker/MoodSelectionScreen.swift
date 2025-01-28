@@ -1,51 +1,21 @@
 //
-//  ContentView.swift
+//  MoodSelectionScreen.swift
 //  Mood Tracker
 //
 //  Created by Ngoni Katsidzira  on 28/1/2025.
 //
 
 import SwiftUI
+import SwiftData
 
-enum Mood: String {
-    case veryUnpleasant = "Very Unpleasant"
-    case unpleasant = "Unpleasant"
-    case neutral = "Neutral"
-    case pleasant = "Pleasant"
-    case veryPleasant = "Very Pleasant"
-    
-    var color: Color {
-        switch self {
-        case .veryUnpleasant:
-                .red
-        case .unpleasant:
-                .orange
-        case .neutral:
-                .yellow
-        case .pleasant:
-                .green
-        case .veryPleasant:
-                .blue
-        }
-    }
-}
-
-struct ContentView: View {
-    @State private var moodValue: Double = 0
-    private var selectedMood: Mood {
-        switch moodValue {
-        case 0: .veryUnpleasant
-        case 1: .unpleasant
-        case 2: .neutral
-        case 3: .pleasant
-        case 4: .veryPleasant
-        default: .neutral
-        }
-    }
+struct MoodSelectionScreen: View {
+    @Environment(\.modelContext) var modelContext
+    @State private var viewModel = MoodSelectionScreenViewModel()
+    @Query(sort: \SaveMood.date) var savedMoods: [SaveMood]
     
     var body: some View {
         ZStack {
-            Color(selectedMood.color.opacity(0.2))
+            Color(viewModel.selectedMood.color.opacity(0.2))
                 .ignoresSafeArea()
             
             VStack {
@@ -53,27 +23,35 @@ struct ContentView: View {
                     .font(.largeTitle.weight(.bold))
                 Spacer()
                 
-                BlobView(colour: selectedMood.color)
+                BlobView(colour: viewModel.selectedMood.color)
+                    .onTapGesture {
+                        savedMoods.forEach { mood in
+                            print(String(repeating: "#", count: 50))
+                            print(mood.date)
+                            print(mood.mood.rawValue)
+                            print(String(repeating: "#", count: 50))
+                        }
+                    }
                 
                 Spacer()
                 
-                Text("\(selectedMood.rawValue)")
+                Text("\(viewModel.selectedMood.rawValue)")
                     .font(.title)
                 
                 Spacer()
                 
-                //            Slider(value: $moodValue, in: 0...4, step: 1)
-                MoodSlider(moodValue: $moodValue)
+                MoodSlider(viewModel: viewModel)
+                
                 Spacer()
                 
                 Button {
-                    // TODO: Save the mood.
+                    modelContext.insert(SaveMood(date: Date(), mood: viewModel.selectedMood))
                 } label: {
                     Text("Save")
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(selectedMood.color)
+                        .background(viewModel.selectedMood.color)
                         .foregroundColor(.white)
                         .clipShape(.capsule)
                 }
@@ -86,9 +64,9 @@ struct ContentView: View {
 let overallScreenPadding: CGFloat = 40
 
 struct MoodSlider: View {
+    var viewModel: MoodSelectionScreenViewModel
     private let size: CGFloat = 40
     @State private var xValue: CGFloat = 0
-    @Binding var moodValue: Double
     private let steps = 5
     
     var body: some View {
@@ -107,13 +85,8 @@ struct MoodSlider: View {
                         .frame(width: size, height: size)
                         .offset(x: xValue)
                         .gesture(DragGesture().onChanged { value in
-                            let minX: CGFloat = 0
-                            let maxX: CGFloat = proxy.size.width - size
-                            let clampedXValue = min(max(minX, value.location.x), maxX)
-                            
-                            let step = round(clampedXValue / stepWidth)
-                            self.xValue = step * stepWidth
-                            self.moodValue = step
+                            viewModel.updateMoodValue(slideXValue: value.location.x, stepWidth: stepWidth, size: size, proxy: proxy)
+                            self.xValue = CGFloat(viewModel.moodValue) * stepWidth
                         })
                 }
                 HStack {
@@ -140,5 +113,5 @@ struct BlobView: View {
 }
 
 #Preview {
-    ContentView()
+    MoodSelectionScreen()
 }
