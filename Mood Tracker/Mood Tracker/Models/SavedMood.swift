@@ -1,5 +1,5 @@
 //
-//  SaveMood.swift
+//  SavedMood.swift
 //  Mood Tracker
 //
 //  Created by Ngoni Katsidzira  on 28/1/2025.
@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class SaveMood {
+class SavedMood {
     var date: Date
     var mood: Mood
     

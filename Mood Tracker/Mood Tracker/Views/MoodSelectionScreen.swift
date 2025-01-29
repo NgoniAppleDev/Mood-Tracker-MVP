@@ -9,9 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct MoodSelectionScreen: View {
-    @Environment(\.modelContext) var modelContext
-    @State private var viewModel = MoodSelectionScreenViewModel()
-    @Query(sort: \SaveMood.date) var savedMoods: [SaveMood]
+    var viewModel: SavedMoodViewModel
     
     var body: some View {
         ZStack {
@@ -24,14 +22,6 @@ struct MoodSelectionScreen: View {
                 Spacer()
                 
                 BlobView(colour: viewModel.selectedMood.color)
-                    .onTapGesture {
-                        savedMoods.forEach { mood in
-                            print(String(repeating: "#", count: 50))
-                            print(mood.date)
-                            print(mood.mood.rawValue)
-                            print(String(repeating: "#", count: 50))
-                        }
-                    }
                 
                 Spacer()
                 
@@ -45,7 +35,7 @@ struct MoodSelectionScreen: View {
                 Spacer()
                 
                 Button {
-                    modelContext.insert(SaveMood(date: Date(), mood: viewModel.selectedMood))
+                    viewModel.save(mood: viewModel.selectedMood, date: Date())
                 } label: {
                     Text("Save")
                         .font(.headline)
@@ -64,7 +54,7 @@ struct MoodSelectionScreen: View {
 let overallScreenPadding: CGFloat = 40
 
 struct MoodSlider: View {
-    var viewModel: MoodSelectionScreenViewModel
+    var viewModel: SavedMoodViewModel
     private let size: CGFloat = 40
     @State private var xValue: CGFloat = 0
     private let steps = 5
@@ -113,5 +103,5 @@ struct BlobView: View {
 }
 
 #Preview {
-    MoodSelectionScreen()
+    MoodSelectionScreen(viewModel: SavedMoodViewModel())
 }
